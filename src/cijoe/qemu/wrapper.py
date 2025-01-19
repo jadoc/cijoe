@@ -254,9 +254,11 @@ class Guest(object):
         #
         ports = system_args.get("tcp_forward", None)
         if ports:
+            if "bind_addr" not in ports:
+                ports["bind_addr"] = "127.0.0.1"
             args += [
                 "-netdev",
-                f"user,id=n1,ipv6=off,hostfwd=tcp::{ports['host']}-:{ports['guest']}",
+                f"user,id=n1,ipv6=off,hostfwd=tcp:{ports['bind_addr']}:{ports['host']}-:{ports['guest']}",
             ]
             args += ["-device", "virtio-net-pci,netdev=n1"]
 
